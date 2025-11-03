@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Roblox Gamepass Creator</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <div class="header-content">
+        <div class="logo">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="32" height="32" rx="8" fill="url(#gradient)"/>
+            <path d="M16 8L20 12L16 16L12 12L16 8Z" fill="white" opacity="0.9"/>
+            <path d="M16 16L20 20L16 24L12 20L16 16Z" fill="white" opacity="0.7"/>
+            <defs>
+              <linearGradient id="gradient" x1="0" y1="0" x2="32" y2="32">
+                <stop offset="0%" stop-color="#667eea"/>
+                <stop offset="100%" stop-color="#764ba2"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div class="header-text">
+          <h1>Gamepass Creator</h1>
+          <p class="tagline">for Roblox</p>
+        </div>
+      </div>
+      <div class="version-badge">v1.0</div>
+    </div>
+    
+    <!-- Loading State -->
+    <div id="loading" class="section hidden">
+      <div class="spinner"></div>
+      <p class="loading-text">Checking login status...</p>
+    </div>
+
+    <!-- Not on Roblox -->
+    <div id="not-roblox" class="section hidden">
+      <div class="info-card warning">
+        <div class="info-icon">⚠️</div>
+        <h3>Navigate to Roblox</h3>
+        <p>Please open a Roblox.com page to use this extension</p>
+      </div>
+    </div>
+
+    <!-- Not Logged In -->
+    <div id="not-logged-in" class="section hidden">
+      <div class="info-card warning">
+        <div class="info-icon">🔒</div>
+        <h3>Login Required</h3>
+        <p>Please log in to your Roblox account first</p>
+        <button id="refresh-btn" class="btn btn-secondary">
+          <span class="btn-icon">🔄</span>
+          Refresh Status
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Interface -->
+    <div id="main-interface" class="section hidden">
+      <div class="user-card">
+        <div class="user-avatar">
+          <div class="avatar-placeholder">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.67 14 12 14Z" fill="currentColor"/>
+            </svg>
+          </div>
+        </div>
+        <div class="user-details">
+          <div class="user-name" id="username">Loading...</div>
+          <div class="user-id">ID: <span id="userid">---</span></div>
+        </div>
+        <div class="status-badge">
+          <span class="status-dot"></span>
+          Online
+        </div>
+      </div>
+
+      <div class="feature-description">
+        <p>Create gamepasses instantly for donation games like <strong>PLS DONATE</strong></p>
+      </div>
+
+      <div class="action-buttons">
+        <button id="common-values-btn" class="btn btn-primary btn-large">
+          <div class="btn-content">
+            <span class="btn-icon">📋</span>
+            <div class="btn-text">
+              <div class="btn-title">Quick Create</div>
+              <div class="btn-subtitle">20 common values (2-10k Robux)</div>
+            </div>
+          </div>
+        </button>
+        
+        <button id="custom-value-btn" class="btn btn-secondary btn-large">
+          <div class="btn-content">
+            <span class="btn-icon">✏️</span>
+            <div class="btn-text">
+              <div class="btn-title">Custom Amount</div>
+              <div class="btn-subtitle">Choose your own value</div>
+            </div>
+          </div>
+        </button>
+
+        <button id="remove-all-btn" class="btn btn-danger btn-large">
+          <div class="btn-content">
+            <span class="btn-icon">🗑️</span>
+            <div class="btn-text">
+              <div class="btn-title">Remove All Gamepasses</div>
+              <div class="btn-subtitle">Take all gamepasses off sale</div>
+            </div>
+          </div>
+        </button>
+      </div>
+
+      <!-- Custom Value Input -->
+      <div id="custom-input" class="hidden custom-input-container">
+        <div class="input-group">
+          <div class="input-label">Enter Robux Amount</div>
+          <div class="input-wrapper">
+            <span class="input-icon">R$</span>
+            <input 
+              type="number" 
+              id="custom-amount" 
+              placeholder="100"
+              min="1"
+              max="1000000"
+            >
+          </div>
+        </div>
+        <div class="button-group">
+          <button id="create-custom-btn" class="btn btn-success">
+            <span class="btn-icon">✓</span>
+            Create Gamepass
+          </button>
+          <button id="cancel-custom-btn" class="btn btn-ghost">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Progress Section -->
+    <div id="progress-section" class="section hidden">
+      <div class="progress-header">
+        <h3>Creating Gamepasses</h3>
+        <div class="progress-spinner"></div>
+      </div>
+      
+      <div class="progress-stats">
+        <div class="stat">
+          <div class="stat-value" id="progress-count">0</div>
+          <div class="stat-label">Created</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <div class="stat-value" id="progress-total">0</div>
+          <div class="stat-label">Total</div>
+        </div>
+      </div>
+
+      <div class="progress-bar-container">
+        <div class="progress-bar">
+          <div id="progress-fill" class="progress-fill"></div>
+        </div>
+        <div class="progress-percentage" id="progress-percentage">0%</div>
+      </div>
+
+      <div class="status-log-container">
+        <div class="status-log-header">Activity Log</div>
+        <div id="status-log" class="status-log"></div>
+      </div>
+    </div>
+
+    <!-- Results Section -->
+    <div id="results-section" class="section hidden">
+      <div class="success-header">
+        <div class="success-icon">
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+            <circle cx="24" cy="24" r="24" fill="#10b981" opacity="0.1"/>
+            <path d="M34 18L20.5 31.5L14 25" stroke="#10b981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3>Success!</h3>
+        <p id="success-summary">Gamepasses created successfully</p>
+      </div>
+
+      <div id="results-list" class="results-grid"></div>
+
+      <button id="done-btn" class="btn btn-primary btn-large">
+        <span class="btn-icon">✓</span>
+        Done
+      </button>
+    </div>
+
+    <!-- Error Section -->
+    <div id="error-section" class="section hidden">
+      <div class="info-card error">
+        <div class="info-icon">❌</div>
+        <h3>Something went wrong</h3>
+        <p id="error-message" class="error-text"></p>
+        <button id="error-back-btn" class="btn btn-secondary">
+          <span class="btn-icon">←</span>
+          Go Back
+        </button>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <div class="footer-content">
+        <div class="creator-info">
+          <span class="creator-label">Created by</span>
+          <a href="https://buymeacoffee.com/andrewzeng" target="_blank" class="creator-link">
+            Andrew Zeng
+          </a>
+        </div>
+        <a href="https://buymeacoffee.com/andrewzeng" target="_blank" class="coffee-button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20 3H4v10c0 2.21 1.79 4 4 4h6c2.21 0 4-1.79 4-4v-3h2c1.11 0 2-.9 2-2V5c0-1.11-.89-2-2-2zm0 5h-2V5h2v3zM4 19h16v2H4z"/>
+          </svg>
+          <span>Buy me a coffee</span>
+        </a>
+      </div>
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
