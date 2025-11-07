@@ -59,8 +59,7 @@ Required permissions in `manifest.json`:
 ```json
 {
   "permissions": [
-    "activeTab",
-    "scripting"
+    "activeTab"
   ],
   "host_permissions": [
     "https://roblox.com/*",
@@ -96,7 +95,7 @@ Content-Type: multipart/form-data
 Headers: x-csrf-token
 
 // Fetch all gamepasses (paginated)
-GET https://games.roblox.com/v1/games/{universeId}/game-passes?limit=100&sortOrder=Asc
+GET https://apis.roblox.com/game-passes/v1/universes/{universeId}/game-passes?&pageSize=100
 ```
 
 ### Authentication Flow
