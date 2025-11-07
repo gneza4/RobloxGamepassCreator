@@ -12,7 +12,7 @@ A Chrome extension that automates gamepass creation and management for Roblox ga
 
 ### From Chrome Web Store
 
-1. Visit the [Chrome Web Store listing](#) (coming soon)
+1. Visit the [Chrome Web Store listing](https://chromewebstore.google.com/detail/roblox-gamepass-creator/mnhnckmekgknmjbmpfcipimndmoeibei?authuser=0&hl=en)
 2. Click "Add to Chrome"
 3. Navigate to any Roblox.com page to use
 
